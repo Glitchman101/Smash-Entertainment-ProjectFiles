@@ -7912,9 +7912,8 @@ MonoBehaviour:
   speed: 8
   jumpforce: 15
   jumpRaycastDistance: 1.2
-  rotationDirection: -1
-  rotationStep: 10
-  objectsArray: []
+  OnGround: 0
+  objectToRotate: {fileID: 953406750}
 --- !u!75 &953406752
 ConstantForce:
   m_ObjectHideFlags: 0
@@ -8032,7 +8031,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hook: {fileID: 936988780}
   hookHolder: {fileID: 1268223890}
-  hookTravelSpeed: 60
+  hookTravelSpeed: 70
   playerTravelSpeed: 50
   hooked: 0
   hookedObj: {fileID: 0}

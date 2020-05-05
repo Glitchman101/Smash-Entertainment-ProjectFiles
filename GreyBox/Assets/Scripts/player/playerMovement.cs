@@ -8,8 +8,11 @@ public class playerMovement : MonoBehaviour
     public float jumpforce;
     public float jumpRaycastDistance;
 
-    private bool OnGround;
-    
+    public bool OnGround;
+
+    public GameObject objectToRotate;
+    private bool rotating;
+
     private Rigidbody rb;
 
     float elapsedTime;
@@ -31,25 +34,25 @@ public class playerMovement : MonoBehaviour
     {
         Move();
         elapsedTime += Time.deltaTime;
-        if(elapsedTime >= 10 && shift == 0)
+        if(elapsedTime >= 15 && shift == 0)
         {
-            GravShiftRight();
+            GravShiftLeft();
             elapsedTime = 0;
             shift = 1;
         }
-        if (elapsedTime >= 10 && shift == 1)
+        if (elapsedTime >= 15 && shift == 1)
         {
             GravShiftUp();
             elapsedTime = 0;
             shift = 2;
         }
-        if (elapsedTime >= 10 && shift == 2)
+        if (elapsedTime >= 15 && shift == 2)
         {
-            GravShiftLeft();
+            GravShiftRight();
             elapsedTime = 0;
             shift = 3;
         }
-        if (elapsedTime >= 10 && shift == 3)
+        if (elapsedTime >= 15 && shift == 3)
         {
             GravShiftDown();
             elapsedTime = 0;
@@ -78,7 +81,7 @@ public class playerMovement : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Space) && OnGround == true && shift == 1)
         {
-            rb.velocity = new Vector3(15f, 0f, 0f);
+            rb.velocity = new Vector3(-15f, 0f, 0f);
             OnGround = false;
         }
         if (Input.GetKeyDown(KeyCode.Space) && OnGround == true && shift == 2)
@@ -88,7 +91,7 @@ public class playerMovement : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Space) && OnGround == true && shift == 3)
         {
-            rb.velocity = new Vector3(-15f, 0f, 0f);
+            rb.velocity = new Vector3(15f, 0f, 0f);
             OnGround = false;
         }
     }
@@ -101,24 +104,47 @@ public class playerMovement : MonoBehaviour
     private void GravShiftUp()
     {
         GetComponent<ConstantForce>().force = new Vector3(0, 9.81f, 0);
-        transform.rotation = Quaternion.Euler(0, 0, 180);
+        //transform.rotation = Quaternion.Euler(0, 0, 180);
+        StartRotation();
     }
 
     private void GravShiftDown()
     {
         GetComponent<ConstantForce>().force = new Vector3(0, -9.81f, 0);
-        transform.rotation = Quaternion.Euler(0, 0, 0);
+        //transform.rotation = Quaternion.Euler(0, 0, 0);
+        StartRotation();
     }
 
     private void GravShiftLeft()
     {
         GetComponent<ConstantForce>().force = new Vector3(9.81f, 0, 0);
-        transform.rotation = Quaternion.Euler(0, 0, 90);
+        //transform.rotation = Quaternion.Euler(0, 0, 90);
+        StartRotation();
     }
 
     private void GravShiftRight()
     {
         GetComponent<ConstantForce>().force = new Vector3(-9.81f, 0, 0);
-        transform.rotation = Quaternion.Euler(0, 0, -90);
+        //transform.rotation = Quaternion.Euler(0, 0, -90);
+        StartRotation();
+    }
+
+    private IEnumerator Rotate(Vector3 angles, float duration)
+    {
+        rotating = true;
+        Quaternion startRotation = objectToRotate.transform.rotation;
+        Quaternion endRotation = Quaternion.Euler(angles) * startRotation;
+        for (float t = 0; t < duration; t += Time.deltaTime)
+        {
+            objectToRotate.transform.rotation = Quaternion.Lerp(startRotation, endRotation, t / duration);
+            yield return null;
+        }
+        objectToRotate.transform.rotation = endRotation;
+        rotating = false;
+    }
+    public void StartRotation()
+    {
+        if (!rotating)
+            StartCoroutine(Rotate(new Vector3(0, 0, 90), 1));
     }
 }
