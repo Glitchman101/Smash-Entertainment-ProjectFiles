@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class playerMovement : MonoBehaviour
+public class Player2Movement : MonoBehaviour
 {
     public float speed;
     public float jumpforce;
@@ -22,7 +22,7 @@ public class playerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         elapsedTime = 0;
-        shift = 0;
+        shift = 2;
     }
 
     private void Update()
@@ -34,7 +34,7 @@ public class playerMovement : MonoBehaviour
     {
         Move();
         elapsedTime += Time.deltaTime;
-        if(elapsedTime >= 15 && shift == 0)
+        if (elapsedTime >= 15 && shift == 0)
         {
             GravShiftLeft();
             elapsedTime = 0;
@@ -98,7 +98,7 @@ public class playerMovement : MonoBehaviour
 
     void OnCollisionEnter(Collision other)
     {
-            OnGround = true;
+        OnGround = true;
     }
 
     private void GravShiftUp()
